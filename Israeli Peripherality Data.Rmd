@@ -56,7 +56,6 @@ numfunction = function(.data, x){
     ) |>
     knitr::kable(digits = 1L)   
 }    
-
 ```
 
 ## Overview
@@ -85,17 +84,7 @@ Variable name: locality_code
 Variable type: numeric   
 Description: Government-assigned code to each locality.    
 ```{r}
-table = 
-    codebook_clean |>
-    summarize(
-      Min = min(locality_code),
-      Mean = mean(locality_code),
-      Median = median(locality_code),
-      Max = max(locality_code),
-      NAs = sum(is.na(locality_code))
-    ) 
-kable(table, digits = 1L)
-
+numfunction(codebook_clean, locality_code)
 ```
 
 Variable name: municipal_status   
