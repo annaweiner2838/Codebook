@@ -1,26 +1,22 @@
 library(tidyverse)
 library(readxl)
 
-periphery_df = read_excel("24_22_420t2.xlsx")
-join_df = read_excel("24_22_420t1.xlsx") |>
+df1 = read_excel("24_22_420t2.xlsx")
+df2 = read_excel("24_22_420t1.xlsx") |>
   select(
     locality_code, 
     local_authority,
-    municipal_status
+    population_2020,
   )
 
-combined = merge(periphery_df, join_df, by = "municipal_status")
+combined = left_join(df1, df2, by = c("population_2020", "locality_code"))
 
 codebook = combined |> 
   mutate(
     local_authority1 = 
       ifelse(is.na(local_authority.x), 
              local_authority.y, 
-             local_authority.x),
-    locality_code1 =
-      ifelse(is.na(locality_code.x), 
-             locality_code.y, 
-             locality_code.x)
+             local_authority.x)
   )
 
 FctWhen = function(...){
@@ -43,7 +39,7 @@ codebook_clean = codebook_clean |>
   select(
     local_authority = local_authority1,
     locality,
-    locality_code = locality_code1,
+    locality_code,
     municipal_status,
     population_2020,
     centrality,
@@ -54,5 +50,7 @@ codebook_clean = codebook_clean |>
     accessibility_rank,
     peri_index_2020_value,
     peri_index_2020_rank
-  )  
-#ask: why so many obs?
+  )
+
+save(codebook_clean, file = "Israel_Peripherality_Data.RData")
+
